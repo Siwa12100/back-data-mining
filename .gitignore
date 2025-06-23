@@ -1,0 +1,55 @@
+# Environnement virtuel
+.env/
+venv/
+ENV/
+env/
+.venv/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Fichiers de log
+*.log
+
+# Données temporaires
+*.tmp
+*.temp
+*.bak
+
+# Fichiers générés par l'éditeur
+*.swp
+*~
+.idea/
+.vscode/
+*.sublime*
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/config.toml
+.streamlit/*.json
+
+# Flask cache/session
+instance/
+*.db
+*.sqlite3
+
+# Pytest / coverage / mypy
+htmlcov/
+.coverage
+.cache/
+.mypy_cache/
+.pytest_cache/
+
+# Jupyter (au cas où)
+*.ipynb_checkpoints/
+
+# Fichiers sensibles potentiels
+*.env
+.env.*
