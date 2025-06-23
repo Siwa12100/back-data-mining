@@ -27,22 +27,18 @@ class File:
                 self.temp_path = tmp.name
 
     def get_stats(self):
-        if self.temp_path is None:
-            self.save_temporarily()
+        df = pd.read_csv(self.uploaded_file, delimiter=self.delimiter)
 
-        df = pd.read_csv(self.temp_path, delimiter=self.delimiter)
+        for col in df.columns:
+            if df[col].dtype == object:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
 
         stats = {
-            "filename": self.filename,
-            "shape": {
-                "rows": df.shape[0],
-                "columns": df.shape[1]
-            },
+            "filename": getattr(self.uploaded_file, "name", "Fichier CSV"),
+            "shape": {"rows": df.shape[0], "columns": df.shape[1]},
             "columns": list(df.columns),
-            "missing_values": df.isnull().sum().to_dict(),
-            "dtypes": df.dtypes.astype(str).to_dict(),
-            "describe": df.describe(include='all').to_dict(),
+            "dtypes": dict(df.dtypes.astype(str)),
+            "missing_values": dict(df.isnull().sum()),
             "df": df
         }
-
         return stats
