@@ -12,7 +12,7 @@ class File:
 
     def save_temporarily(self):
         # Enregistre le fichier dans un fichier temporaire
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".csv", dir="./src/uploads/") as tmp:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".csv", dir="./uploads/") as tmp:
             tmp.write(self.uploaded_file.read())
             self.temp_path = tmp.name
 

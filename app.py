@@ -9,27 +9,52 @@ st.markdown("### 📁 Charger un fichier CSV")
 uploaded_file = st.file_uploader("Glissez-déposez votre fichier ou cliquez pour en choisir un", type=["csv"])
 
 if uploaded_file is not None:
-    try:
-        fichier = File(uploaded_file)
-        stats = fichier.get_stats()
-        df = stats["df"]
+    st.success("✅ Fichier uploadé avec succès !")
 
-        st.success("✅ Fichier chargé avec succès !")
-        st.markdown("### 👀 Aperçu des données")
-        st.dataframe(df)
+    # Choix du délimiteur
+    st.markdown("### 🛠️ Choix du délimiteur")
+    delimiter = st.radio(
+        "Quel est le séparateur utilisé dans votre fichier ?",
+        options=[",", ";", "\t", "|"],
+        index=0,
+        format_func=lambda x: {
+            ",": "Virgule `,`",
+            ";": "Point-virgule `;`",
+            "\t": "Tabulation `\\t`",
+            "|": "Barre verticale `|`"
+        }[x]
+    )
 
-        st.markdown("### ℹ️ Informations générales")
-        st.write(f"**Nom du fichier :** {stats['filename']}")
-        st.write(f"**Nombre de lignes :** {stats['shape']['rows']}")
-        st.write(f"**Nombre de colonnes :** {stats['shape']['columns']}")
-        st.write("**Colonnes :**", stats["columns"])
-        st.write("**Types de données :**", stats["dtypes"])
-        st.write("**Valeurs manquantes :**", stats["missing_values"])
+    # Bouton de chargement du fichier avec le délimiteur choisi
+    if st.button("📂 Charger les données avec ce délimiteur"):
+        try:
+            fichier = File(uploaded_file, delimiter=delimiter)
+            stats = fichier.get_stats()
+            df = stats["df"]
 
-        st.markdown("### 📈 Statistiques descriptives")
-        st.write(stats["describe"])
+            st.success("✅ Fichier chargé avec succès !")
 
-    except Exception as e:
-        st.error(f"❌ Erreur lors du traitement du fichier : {e}")
+            # Aperçu haut/bas du DataFrame
+            st.markdown("### 🔍 Aperçu du début des données")
+            st.dataframe(df.head())
+
+            st.markdown("### 🔎 Aperçu de la fin des données")
+            st.dataframe(df.tail())
+
+            # Informations générales
+            st.markdown("### ℹ️ Résumé des données")
+            st.write(f"**Nom du fichier :** `{stats['filename']}`")
+            st.write(f"**Nombre de lignes :** `{stats['shape']['rows']}`")
+            st.write(f"**Nombre de colonnes :** `{stats['shape']['columns']}`")
+            st.write("**Colonnes :**", stats["columns"])
+            st.write("**Types de données :**", stats["dtypes"])
+            st.write("**Valeurs manquantes :**", stats["missing_values"])
+
+            # Statistiques descriptives
+            st.markdown("### 📈 Statistiques descriptives")
+            st.dataframe(df.describe(include='all'))
+
+        except Exception as e:
+            st.error(f"❌ Erreur lors du traitement du fichier : {e}")
 else:
     st.info("Veuillez charger un fichier CSV pour commencer.")
