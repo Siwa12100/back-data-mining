@@ -31,7 +31,7 @@ if uploaded_file is not None:
             stats = fichier.get_stats()
             df = stats["df"]
             
-            st.session_state["csv_file"] = uploaded_file
+            st.session_state["df"] = df
             st.session_state["delimiter"] = delimiter
 
             st.success("✅ Fichier chargé avec succès !")

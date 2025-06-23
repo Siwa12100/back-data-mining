@@ -10,10 +10,6 @@ class File:
         self.filename = uploaded_file.name
         self.temp_path = None
 
-    def preview(self):
-        df = pd.read_csv(self.file_path, delimiter=self.delimiter)
-        return df.head(3), df.tail(3)
-
     def save_temporarily(self):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".csv", dir="./uploads/") as tmp:
             tmp.write(self.uploaded_file.read())
