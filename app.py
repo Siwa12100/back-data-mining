@@ -11,7 +11,6 @@ uploaded_file = st.file_uploader("Glissez-déposez votre fichier ou cliquez pour
 if uploaded_file is not None:
     st.success("✅ Fichier uploadé avec succès !")
 
-    # Choix du délimiteur
     st.markdown("### 🛠️ Choix du délimiteur")
     delimiter = st.radio(
         "Quel est le séparateur utilisé dans votre fichier ?",
@@ -21,27 +20,28 @@ if uploaded_file is not None:
             ",": "Virgule `,`",
             ";": "Point-virgule `;`",
             "\t": "Tabulation `\\t`",
-            "|": "Barre verticale `|`"
+            "|": "Barre verticale `|`", 
+            " ": "Espace ` `"
         }[x]
     )
 
-    # Bouton de chargement du fichier avec le délimiteur choisi
     if st.button("📂 Charger les données avec ce délimiteur"):
         try:
             fichier = File(uploaded_file, delimiter=delimiter)
             stats = fichier.get_stats()
             df = stats["df"]
+            
+            st.session_state["csv_file"] = uploaded_file
+            st.session_state["delimiter"] = delimiter
 
             st.success("✅ Fichier chargé avec succès !")
 
-            # Aperçu haut/bas du DataFrame
             st.markdown("### 🔍 Aperçu du début des données")
             st.dataframe(df.head())
 
             st.markdown("### 🔎 Aperçu de la fin des données")
             st.dataframe(df.tail())
 
-            # Informations générales
             st.markdown("### ℹ️ Résumé des données")
             st.write(f"**Nom du fichier :** `{stats['filename']}`")
             st.write(f"**Nombre de lignes :** `{stats['shape']['rows']}`")
@@ -50,9 +50,13 @@ if uploaded_file is not None:
             st.write("**Types de données :**", stats["dtypes"])
             st.write("**Valeurs manquantes :**", stats["missing_values"])
 
-            # Statistiques descriptives
             st.markdown("### 📈 Statistiques descriptives")
             st.dataframe(df.describe(include='all'))
+            
+            if st.button("➡️ Passer à l'étape 2 : Pré-traitement des données"):
+                # st.switch_page("pages/page2.py")
+                st.switch_page("pages/2_Pretraitement_et_nettoyage.py")
+
 
         except Exception as e:
             st.error(f"❌ Erreur lors du traitement du fichier : {e}")

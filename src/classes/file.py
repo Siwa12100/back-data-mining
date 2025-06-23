@@ -11,7 +11,6 @@ class File:
         self.temp_path = None
 
     def save_temporarily(self):
-        # Enregistre le fichier dans un fichier temporaire
         with tempfile.NamedTemporaryFile(delete=False, suffix=".csv", dir="./uploads/") as tmp:
             tmp.write(self.uploaded_file.read())
             self.temp_path = tmp.name
@@ -32,7 +31,7 @@ class File:
             "missing_values": df.isnull().sum().to_dict(),
             "dtypes": df.dtypes.astype(str).to_dict(),
             "describe": df.describe(include='all').to_dict(),
-            "df": df  # Pour réutilisation directe dans Streamlit
+            "df": df
         }
 
         return stats
