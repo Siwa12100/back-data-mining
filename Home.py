@@ -15,13 +15,14 @@ if uploaded_file is not None:
     st.markdown("### 🛠️ Choix du délimiteur")
     delimiter = st.radio(
         "Quel est le séparateur utilisé dans votre fichier ?",
-        options=[",", ";", "\t", "|"],
+        options=[",", ";", "\t", "|", " "],
         index=0,
         format_func=lambda x: {
             ",": "Virgule `,`",
             ";": "Point-virgule `;`",
             "\t": "Tabulation `\\t`",
             "|": "Barre verticale `|`",
+            " ": "Espace ` `"
         }[x]
     )
 
@@ -62,7 +63,6 @@ if uploaded_file is not None:
             st.dataframe(df.describe(include='all'))
             
             if st.button("➡️ Passer à l'étape 2 : Pré-traitement des données"):
-                # st.switch_page("pages/page2.py")
                 st.switch_page("pages/2_Pretraitement_et_nettoyage.py")
 
 

@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from src.classes.file import File
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+
 
 st.set_page_config(page_title="Pré-traitement", layout="centered")
 st.title("🧹 Partie II : Pré-traitement et nettoyage des données")
@@ -123,8 +125,6 @@ normalisation = st.selectbox(
 )
 
 if normalisation != "Aucune":
-    from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
-
     scaler = None
     if normalisation.startswith("Min-Max"):
         scaler = MinMaxScaler()
