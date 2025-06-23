@@ -55,7 +55,9 @@ if uploaded_file is not None:
             
             if st.button("➡️ Passer à l'étape 2 : Pré-traitement des données"):
                 # st.switch_page("pages/page2.py")
-                st.switch_page("pages/2_Pretraitement_et_nettoyage.py")
+                # st.switch_page("pages/2_Pretraitement_et_nettoyage.py")
+                st.switch_page("2_Pretraitement_et_nettoyage")
+
 
 
         except Exception as e:
