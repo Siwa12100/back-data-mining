@@ -54,6 +54,7 @@ if colonnes_choisies:
         ]
     )
 
+
     # ✂️ Suppression des lignes
     if methode_na == "Supprimer les lignes":
         df = df.dropna(subset=colonnes_choisies)
