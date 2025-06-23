@@ -8,6 +8,10 @@ class File:
         self.file_path = os.path.join("./src/uploads/", filename)
         self.delimiter = delimiter
 
+    def preview(self):
+        df = pd.read_csv(self.file_path, delimiter=self.delimiter)
+        return df.head(3), df.tail(3)
+
     def getStats(self):
         if not os.path.exists(self.file_path):
             return "Aucun fichier trouvé"
