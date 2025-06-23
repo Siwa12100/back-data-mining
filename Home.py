@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 from src.classes.file import File
 
 st.set_page_config(page_title="Projet Data Mining", layout="centered")
@@ -20,19 +21,26 @@ if uploaded_file is not None:
             ",": "Virgule `,`",
             ";": "Point-virgule `;`",
             "\t": "Tabulation `\\t`",
-            "|": "Barre verticale `|`", 
-            " ": "Espace ` `"
+            "|": "Barre verticale `|`",
         }[x]
     )
 
     if st.button("📂 Charger les données avec ce délimiteur"):
         try:
-            fichier = File(uploaded_file, delimiter=delimiter)
+            # 🔸 Sauvegarde physique du fichier
+            uploads_dir = Path("uploads")
+            uploads_dir.mkdir(exist_ok=True)
+            saved_path = uploads_dir / uploaded_file.name
+            with open(saved_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+
+            # 🔸 Enregistrer chemin et délimiteur en session
+            st.session_state["csv_path"] = str(saved_path)
+            st.session_state["delimiter"] = delimiter
+
+            fichier = File(saved_path, delimiter=delimiter)
             stats = fichier.get_stats()
             df = stats["df"]
-            
-            st.session_state["csv_file"] = uploaded_file
-            st.session_state["delimiter"] = delimiter
 
             st.success("✅ Fichier chargé avec succès !")
 
@@ -53,10 +61,7 @@ if uploaded_file is not None:
             st.markdown("### 📈 Statistiques descriptives")
             st.dataframe(df.describe(include='all'))
             
-            if st.button("➡️ Passer à l'étape 2 : Pré-traitement des données"):
-                # st.switch_page("pages/page2.py")
-                st.switch_page("pages/2_Pretraitement_et_nettoyage.py")
-
+            st.write("Passez à la Partie II : Pré-traitement et nettoyage des données pour continuer votre exploration.")
 
         except Exception as e:
             st.error(f"❌ Erreur lors du traitement du fichier : {e}")
