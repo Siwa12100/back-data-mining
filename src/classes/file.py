@@ -2,19 +2,20 @@ import os
 import pandas as pd
 
 
-class File : 
-    def __init__(self, filename):
+class File: 
+    def __init__(self, filename, delimiter = ','):
         self.filename = filename
         self.file_path = os.path.join("./src/uploads/", filename)
+        self.delimiter = delimiter
 
     def getStats(self):
         if not os.path.exists(self.file_path):
-            return {"error": "Fichier non trouvé"}
+            return "Aucun fichier trouvé"
 
-        df = pd.read_csv(self.file_path)
+        df = pd.read_csv(self.file_path, delimiter=self.delimiter)
 
         stats = {
-            "filename": self.file_name,
+            "filename": self.filename,
             "shape": {
                 "rows": df.shape[0],
                 "columns": df.shape[1]
