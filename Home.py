@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 from src.classes.file import File
 
 st.set_page_config(page_title="Projet Data Mining", layout="centered")
@@ -14,25 +15,39 @@ if uploaded_file is not None:
     st.markdown("### 🛠️ Choix du délimiteur")
     delimiter = st.radio(
         "Quel est le séparateur utilisé dans votre fichier ?",
-        options=[",", ";", "\t", "|"],
+        options=[",", ";", "\t", "|", " "],
         index=0,
         format_func=lambda x: {
             ",": "Virgule `,`",
             ";": "Point-virgule `;`",
             "\t": "Tabulation `\\t`",
-            "|": "Barre verticale `|`", 
+            "|": "Barre verticale `|`",
             " ": "Espace ` `"
         }[x]
     )
 
     if st.button("📂 Charger les données avec ce délimiteur"):
         try:
-            fichier = File(uploaded_file, delimiter=delimiter)
+            # 🔸 Sauvegarde physique du fichier
+            uploads_dir = Path("uploads")
+            uploads_dir.mkdir(exist_ok=True)
+            saved_path = uploads_dir / uploaded_file.name
+            with open(saved_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+
+            # 🔸 Enregistrer chemin et délimiteur en session
+            st.session_state["csv_path"] = str(saved_path)
+            st.session_state["delimiter"] = delimiter
+
+            fichier = File(saved_path, delimiter=delimiter)
             stats = fichier.get_stats()
             df = stats["df"]
+<<<<<<< HEAD:app.py
             
             st.session_state["df"] = df
             st.session_state["delimiter"] = delimiter
+=======
+>>>>>>> main:Home.py
 
             st.success("✅ Fichier chargé avec succès !")
 
@@ -54,7 +69,6 @@ if uploaded_file is not None:
             st.dataframe(df.describe(include='all'))
             
             if st.button("➡️ Passer à l'étape 2 : Pré-traitement des données"):
-                # st.switch_page("pages/page2.py")
                 st.switch_page("pages/2_Pretraitement_et_nettoyage.py")
 
 
