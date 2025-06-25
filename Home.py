@@ -28,7 +28,6 @@ if uploaded_file is not None:
 
     if st.button("📂 Charger les données avec ce délimiteur"):
         try:
-            # 🔸 Sauvegarde physique du fichier
             uploads_dir = Path("uploads")
             uploads_dir.mkdir(exist_ok=True)
             saved_path = uploads_dir / uploaded_file.name
@@ -64,7 +63,7 @@ if uploaded_file is not None:
 
             st.markdown("### 📈 Statistiques descriptives")
             st.dataframe(df.describe(include='all'))
-
+            
         except Exception as e:
             st.error(f"❌ Erreur lors du traitement du fichier : {e}")
 else:
