@@ -61,10 +61,6 @@ if uploaded_file is not None:
 
             st.markdown("### 📈 Statistiques descriptives")
             st.dataframe(df.describe(include='all'))
-            
-            if st.button("➡️ Passer à l'étape 2 : Pré-traitement des données"):
-                st.switch_page("pages/2_Pretraitement_et_nettoyage.py")
-
 
         except Exception as e:
             st.error(f"❌ Erreur lors du traitement du fichier : {e}")
