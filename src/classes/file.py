@@ -7,7 +7,6 @@ class File:
         self.delimiter = delimiter
         self.temp_path = None
 
-        # Si la source est un fichier uploadé
         if hasattr(source, "read") and hasattr(source, "name"):
             self.uploaded_file = source
             self.filename = source.name
