@@ -62,7 +62,7 @@ if mode == "Clustering":
                 st.session_state["modele_type"] = "clustering"
                 st.session_state["modele_objet"] = clustering
                 st.success("✅ Clustering terminé. Redirection vers l’évaluation...")
-                st.switch_page("pages/5_Evaluation.py")
+                st.switch_page("pages/5_Évaluation_du_résultat.py")
 
             except Exception as e:
                 st.error(f"❌ Erreur lors du clustering : {e}")
@@ -98,7 +98,7 @@ elif mode == "Prédiction":
                 st.session_state["modele_type"] = "prediction"
                 st.session_state["modele_objet"] = predictor
                 st.success("✅ Modèle entraîné. Redirection vers l’évaluation...")
-                st.switch_page("pages/5_Evaluation.py")
+                st.switch_page("pages/5_Évaluation_du_résultat.py")
 
             except Exception as e:
                 st.error(f"❌ Erreur : {e}")

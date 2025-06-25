@@ -6,49 +6,63 @@ from pathlib import Path
 st.set_page_config(page_title="Visualisation", layout="centered")
 st.title("📊 Partie III : Visualisation des données nettoyées")
 
-st.markdown("### 🚀 Chargement des données pré-traitées")
-uploaded = st.file_uploader(
-    "Téléchargez le fichier CSV pré-traité",
-    type="csv",
-    help="Sélectionnez le fichier généré à la fin de la partie II."
+# ✅ Choix de la source des données
+st.markdown("### 🚀 Chargement des données")
+source = st.radio(
+    "Choisissez la source des données à visualiser :",
+    ("Réutiliser les données pré-traitées", "Charger un fichier CSV"),
+    index=0
 )
 
-if uploaded is None:
-    st.info("Veuillez télécharger un fichier CSV nettoyé pour commencer la visualisation.")
-    st.stop()
+df = None
 
-try:
-    df = pd.read_csv(uploaded)
-    st.success("✅ Fichier chargé avec succès !")
-    st.markdown(f"📏 **Dimensions :** {df.shape[0]} lignes × {df.shape[1]} colonnes")
-except Exception as e:
-    st.error(f"❌ Impossible de lire le CSV : {e}")
-    st.stop()
+if source == "Réutiliser les données pré-traitées":
+    if "df_pretraite" in st.session_state:
+        df = st.session_state["df_pretraite"]
+        st.success("✅ Données pré-traitées chargées depuis la session.")
+        st.markdown(f"📏 **Dimensions :** {df.shape[0]} lignes × {df.shape[1]} colonnes")
+    else:
+        st.warning("⚠️ Aucune donnée pré-traitée disponible en session. Veuillez d'abord passer par la partie II.")
+        st.stop()
+
+elif source == "Charger un fichier CSV":
+    uploaded = st.file_uploader(
+        "Téléchargez un fichier CSV pré-traité",
+        type="csv",
+        help="Sélectionnez le fichier généré à la fin de la partie II."
+    )
+
+    if uploaded is None:
+        st.info("Veuillez télécharger un fichier CSV nettoyé pour continuer.")
+        st.stop()
+
+    try:
+        df = pd.read_csv(uploaded)
+        st.success("✅ Fichier chargé avec succès !")
+        st.markdown(f"📏 **Dimensions :** {df.shape[0]} lignes × {df.shape[1]} colonnes")
+    except Exception as e:
+        st.error(f"❌ Impossible de lire le CSV : {e}")
+        st.stop()
 
 # ✅ Choix des colonnes numériques
 st.markdown("### 🧪 Choix des variables à visualiser")
 colonnes_num = df.select_dtypes(include='number').columns.tolist()
 
-# Ajout du bouton 'Tout sélectionner'
+if not colonnes_num:
+    st.warning("Aucune colonne numérique détectée.")
+    st.stop()
+
 select_all = st.checkbox("Tout sélectionner", value=False)
 
-# Définir la sélection initiale
-if select_all:
-    selection = st.multiselect(
-        "Choisissez une ou plusieurs colonnes pour les graphiques :",
-        colonnes_num,
-        default=colonnes_num,
-        help="Sélectionnez les caractéristiques dont vous voulez explorer la distribution ou détecter les outliers."
-    )
-else:
-    selection = st.multiselect(
-        "Choisissez une ou plusieurs colonnes pour les graphiques :",
-        colonnes_num,
-        help="Sélectionnez les caractéristiques dont vous voulez explorer la distribution ou détecter les outliers."
-    )
+selection = st.multiselect(
+    "Choisissez une ou plusieurs colonnes numériques :",
+    colonnes_num,
+    default=colonnes_num if select_all else None,
+    help="Explorez la distribution ou détectez les outliers dans vos colonnes numériques."
+)
 
 if not selection:
-    st.info("Sélectionnez au moins une colonne numérique pour afficher les graphiques.")
+    st.info("Sélectionnez au moins une colonne pour afficher les graphiques.")
     st.stop()
 
 # ✅ Type de graphique
@@ -57,7 +71,7 @@ graphique = st.radio(
     "Sélectionnez le type de visualisation :",
     ("Histogramme", "Boîte à moustaches"),
     index=0,
-    help="Histogramme pour la distribution, boîte à moustaches pour détecter les outliers."
+    help="Histogramme pour la distribution, boîte à moustaches pour détecter les valeurs aberrantes."
 )
 
 # ✅ Génération des graphiques
