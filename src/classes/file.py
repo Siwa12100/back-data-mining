@@ -24,14 +24,11 @@ class File:
                 self.temp_path = tmp.name
 
     def get_stats(self):
-        # Choix de la source du fichier
         if self.is_uploaded_file:
             self.save_temporarily()
 
-        # Lecture à partir de temp_path
         df = pd.read_csv(self.temp_path, delimiter=self.delimiter)
 
-        # Tentative de conversion des colonnes object → numeric si possible
         for col in df.columns:
             if df[col].dtype == object:
                 df[col] = pd.to_numeric(df[col], errors='coerce')
