@@ -42,12 +42,9 @@ if uploaded_file is not None:
             fichier = File(saved_path, delimiter=delimiter)
             stats = fichier.get_stats()
             df = stats["df"]
-<<<<<<< HEAD:app.py
             
             st.session_state["df"] = df
             st.session_state["delimiter"] = delimiter
-=======
->>>>>>> main:Home.py
 
             st.success("✅ Fichier chargé avec succès !")
 
