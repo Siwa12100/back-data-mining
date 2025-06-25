@@ -92,7 +92,10 @@ if colonnes_choisies:
     elif methode_na == "Imputation KNN":
         from sklearn.impute import KNNImputer
         imputer = KNNImputer(n_neighbors=3)
-        df[colonnes_choisies] = imputer.fit_transform(df[colonnes_choisies])
+        # df[colonnes_choisies] = imputer.fit_transform(df[colonnes_choisies])
+        imputed_values = imputer.fit_transform(df[colonnes_choisies])
+        df_imputed = pd.DataFrame(imputed_values, columns=colonnes_choisies, index=df.index)
+        df.loc[:, colonnes_choisies] = df_imputed
 
     # 🔄 Imputation par régression
     elif methode_na == "Imputation par régression":
